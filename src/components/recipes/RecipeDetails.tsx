@@ -15,21 +15,35 @@ export const RecipeDetails = () => {
     // TODO: add image to db
     return (
         recipe && (
-            <div className="flex flex-col items-center justify-center p-8">
-                <h1 className="text-center text-3xl font-bold">
+            <div className="flex flex-col items-center justify-center p-8 md:gap-10 md:p-15">
+                <h1 className="text-center text-3xl font-bold md:mt-10 md:text-6xl">
                     {recipe.name}
                 </h1>
-                <p className="mt-2">{recipe.description}</p>
-                <div className="mt-5 self-start">
-                    <h2 className="text-xl font-semibold">Ingredients</h2>
+                <p className="mt-2 text-center md:mt-8 md:text-3xl md:font-semibold">
+                    {recipe.description}
+                </p>
+                <div className="mt-5 self-start md:mt-10 md:self-center">
+                    <h2 className="text-xl font-semibold md:text-2xl">
+                        Ingredients
+                    </h2>
                     {recipe.ingredients?.map((i) => {
-                        return <p className="ml-8">{i.name}</p>
+                        return (
+                            <p className="ml-8 md:m-0 md:text-center md:text-lg">
+                                {i.name}
+                            </p>
+                        )
                     })}
                 </div>
-                <div className="mt-10 grid grid-cols-[1rem_1fr] gap-y-3">
+                <div className="mt-10 grid grid-cols-[1rem_1fr] items-center gap-y-3 md:gap-x-2">
                     {recipe.instructions.split(".").map((r) => {
                         return (
-                            <p className={parseInt(r) ? "font-bold" : ""}>
+                            <p
+                                className={
+                                    parseInt(r) ?
+                                        "font-bold md:text-2xl"
+                                    :   "md:text-xl"
+                                }
+                            >
                                 {r}
                             </p>
                         )
