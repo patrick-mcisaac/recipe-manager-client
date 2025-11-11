@@ -11,14 +11,22 @@ export const RecipeProvider = ({ children }: Props) => {
     const [recipes, setRecipes] = useState<RecipeType[] | undefined>(undefined)
     const [recipe, setRecipe] = useState<RecipeType | undefined>(undefined)
 
-    const getRecipes = () => {
-        fetch(`http://localhost:8000/recipes`)
+    const getRecipes = (token: string) => {
+        fetch(`http://localhost:8000/recipes`, {
+            headers: {
+                Authorization: `Token ${token}`
+            }
+        })
             .then((res) => res.json())
             .then(setRecipes)
     }
 
-    const getRecipeById = (id: string) => {
-        fetch(`http://localhost:8000/recipes/${id}`)
+    const getRecipeById = (id: string, token: string) => {
+        fetch(`http://localhost:8000/recipes/${id}`, {
+            headers: {
+                Authorization: `Token ${token}`
+            }
+        })
             .then((res) => res.json())
             .then(setRecipe)
     }
@@ -33,6 +41,23 @@ export const RecipeProvider = ({ children }: Props) => {
             .then(setRecipes)
     }
 
+    const addFavorite = (id: string, token: string) => {
+        return fetch(`http://localhost:8000/recipes/${id}?favorite=true`, {
+            method: "PUT",
+            headers: {
+                Authorization: `Token ${token}`
+            }
+        })
+    }
+
+    const removeFavorite = (id: string, token: string) => {
+        return fetch(`http://localhost:8000/recipes/${id}?favorite=false`, {
+            method: "PUT",
+            headers: {
+                Authorization: `Token ${token}`
+            }
+        })
+    }
     return (
         <RecipeContext.Provider
             value={{
@@ -40,7 +65,9 @@ export const RecipeProvider = ({ children }: Props) => {
                 recipe,
                 getRecipeById,
                 getRecipes,
-                getFavoriteRecipes
+                getFavoriteRecipes,
+                addFavorite,
+                removeFavorite
             }}
         >
             {children}

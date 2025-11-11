@@ -1,14 +1,22 @@
 import { useEffect } from "react"
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { useRecipes } from "../../hooks/useRecipes"
+import { useAuth } from "../../hooks/useAuth"
 
 export const RecipeDetails = () => {
     const { recipeId } = useParams()
-    const { recipe, getRecipeById } = useRecipes()
+    const { recipe, getRecipeById, addFavorite, removeFavorite } = useRecipes()
+    const { token, getToken } = useAuth()
+
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        getToken()
+    }, [])
 
     useEffect(() => {
         if (recipeId) {
-            getRecipeById(recipeId)
+            getRecipeById(recipeId, token)
         }
     }, [recipeId])
     // TODO: maybe refactor how ingredients are stored to map it nicer
@@ -53,6 +61,32 @@ export const RecipeDetails = () => {
                         )
                     })}
                 </div>
+                {recipe.is_favorite ?
+                    <button
+                        onClick={() => {
+                            if (recipeId) {
+                                removeFavorite(recipeId, token).then(() =>
+                                    navigate("/recipes/favorites")
+                                )
+                            }
+                        }}
+                        className="h-10 w-40 cursor-pointer self-center rounded-2xl bg-gray-800 text-white hover:scale-105"
+                    >
+                        Remove Favorite
+                    </button>
+                :   <button
+                        onClick={() => {
+                            if (recipeId) {
+                                addFavorite(recipeId, token).then(() =>
+                                    navigate("/recipes/favorites")
+                                )
+                            }
+                        }}
+                        className="h-10 w-40 cursor-pointer self-center rounded-2xl bg-gray-800 text-white hover:scale-105"
+                    >
+                        Favorite
+                    </button>
+                }
             </div>
         )
     )

@@ -3,9 +3,11 @@ import type { IngredientTypes } from "./ingredientTypes"
 export interface RecipeContextType {
     recipes: RecipeType[] | undefined
     recipe: RecipeType | undefined
-    getRecipeById: (id: string) => void
-    getRecipes: () => void
+    getRecipeById: (id: string, token: string) => void
+    getRecipes: (token: string) => void
     getFavoriteRecipes: (token: string) => void
+    addFavorite: (id: string, token: string) => Promise<Response>
+    removeFavorite: (id: string, token: string) => Promise<Response>
 }
 
 export interface RecipeType {
@@ -16,4 +18,5 @@ export interface RecipeType {
     user?: number
     ingredients?: IngredientTypes[]
     favorites?: number
+    is_favorite?: boolean
 }
