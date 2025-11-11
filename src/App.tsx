@@ -1,12 +1,15 @@
+import { AuthProvider } from "./auth/AuthProvider"
 import { RecipeProvider } from "./components/recipes/RecipeProvider"
 import { ApplicationViews } from "./views/ApplicationViews"
 
 function App() {
     return (
         <>
-            <RecipeProvider>
-                <ApplicationViews />
-            </RecipeProvider>
+            <AuthProvider>
+                <RecipeProvider>
+                    <ApplicationViews />
+                </RecipeProvider>
+            </AuthProvider>
         </>
     )
 }
