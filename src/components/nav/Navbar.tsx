@@ -10,22 +10,29 @@ export const Navbar = () => {
     }, [])
     return (
         <ul className="flex h-20 items-center justify-between p-5 md:p-10 dark:bg-gray-950 dark:text-white">
-            <Link to="/recipes">
-                <li className="text-2xl hover:scale-105">Recipes</li>
-            </Link>
+            <div className="flex items-center justify-center gap-5 md:gap-10">
+                <Link to="/recipes">
+                    <li className="text-2xl hover:scale-105">Recipes</li>
+                </Link>
+                <Link to="/recipes/favorites">
+                    <li className="text-2xl hover:scale-105">Favorites</li>
+                </Link>
+            </div>
 
             {token ?
-                <div className="">
-                    <li
-                        onClick={() => {
-                            localStorage.removeItem("recipe_token")
-                            navigate("/login")
-                        }}
-                        className="cursor-pointer text-2xl hover:scale-105"
-                    >
-                        Logout
-                    </li>
-                </div>
+                <>
+                    <div className="md:mr-5">
+                        <li
+                            onClick={() => {
+                                localStorage.removeItem("recipe_token")
+                                navigate("/login")
+                            }}
+                            className="cursor-pointer text-2xl hover:scale-105"
+                        >
+                            Logout
+                        </li>
+                    </div>
+                </>
             :   <div className="flex items-center gap-5 md:gap-10">
                     <Link to="/login">
                         <li className="text-2xl hover:scale-105">Login</li>

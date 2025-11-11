@@ -5,6 +5,7 @@ export interface RecipeContextType {
     recipe: RecipeType | undefined
     getRecipeById: (id: string) => void
     getRecipes: () => void
+    getFavoriteRecipes: () => void
 }
 
 export interface RecipeType {

@@ -23,9 +23,21 @@ export const RecipeProvider = ({ children }: Props) => {
             .then(setRecipe)
     }
 
+    const getFavoriteRecipes = () => {
+        fetch(`http://localhost:8000/recipes?favorite=true`)
+            .then((res) => res.json())
+            .then(setRecipe)
+    }
+
     return (
         <RecipeContext.Provider
-            value={{ recipes, recipe, getRecipeById, getRecipes }}
+            value={{
+                recipes,
+                recipe,
+                getRecipeById,
+                getRecipes,
+                getFavoriteRecipes
+            }}
         >
             {children}
         </RecipeContext.Provider>

@@ -1,11 +1,11 @@
 import { Outlet, Route, Routes } from "react-router-dom"
 import { Home } from "../components/home/Home"
-
 import { Recipes } from "../components/recipes/Recipes"
 import { RecipeDetails } from "../components/recipes/RecipeDetails"
 import { Login } from "../auth/Login"
 import { Authorized } from "../auth/Authorized"
 import { Register } from "../auth/Register"
+import { Favorites } from "../components/recipes/Favorites"
 
 export const ApplicationViews = () => {
     return (
@@ -24,6 +24,7 @@ export const ApplicationViews = () => {
                 <Route path="recipes" element={<Outlet />}>
                     <Route index element={<Recipes />} />
                     <Route path=":recipeId" element={<RecipeDetails />} />
+                    <Route path="favorites" element={<Favorites />} />
                 </Route>
             </Route>
         </Routes>
