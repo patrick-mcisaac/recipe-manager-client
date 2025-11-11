@@ -23,10 +23,14 @@ export const RecipeProvider = ({ children }: Props) => {
             .then(setRecipe)
     }
 
-    const getFavoriteRecipes = () => {
-        fetch(`http://localhost:8000/recipes?favorite=true`)
+    const getFavoriteRecipes = (token: string) => {
+        fetch(`http://localhost:8000/recipes?favorite=true`, {
+            headers: {
+                Authorization: `Token ${token}`
+            }
+        })
             .then((res) => res.json())
-            .then(setRecipe)
+            .then(setRecipes)
     }
 
     return (

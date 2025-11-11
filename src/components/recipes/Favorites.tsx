@@ -1,13 +1,21 @@
 import { useEffect } from "react"
 import { useRecipes } from "../../hooks/useRecipes"
 import { RecipeList } from "./RecipeList"
+import { useAuth } from "../../hooks/useAuth"
 
 export const Favorites = () => {
     const { recipes, getFavoriteRecipes } = useRecipes()
+    const { token, getToken } = useAuth()
 
     useEffect(() => {
-        getFavoriteRecipes()
+        getToken()
     }, [])
+
+    useEffect(() => {
+        if (token) {
+            getFavoriteRecipes(token)
+        }
+    }, [token])
     return (
         <div className="p-10">
             <h1 className="text-center text-6xl font-bold tracking-wider md:mt-15 md:text-6xl">
