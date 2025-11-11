@@ -31,10 +31,12 @@ export const Login = () => {
     }
 
     return (
-        <form>
-            <fieldset>
+        <form className="flex flex-col items-center justify-center gap-10 p-40">
+            <h1 className="text-6xl font-bold">Recipe Manager Login</h1>
+            <fieldset className="flex flex-col gap-2">
                 <label htmlFor="username">Username</label>
                 <input
+                    className="rounded-2xl border pl-2"
                     type="text"
                     placeholder="username"
                     id="username"
@@ -43,9 +45,10 @@ export const Login = () => {
                     onChange={handleChange}
                 />
             </fieldset>
-            <fieldset>
+            <fieldset className="flex flex-col gap-2">
                 <label htmlFor="password">Password</label>
                 <input
+                    className="rounded-2xl border pl-2"
                     onChange={handleChange}
                     type="password"
                     placeholder="password"
@@ -54,15 +57,23 @@ export const Login = () => {
                     value={userLogin.password}
                 />
             </fieldset>
-            <button onClick={handleSubmit}>Login</button>
-            <button
-                onClick={(e) => {
-                    e.preventDefault()
-                    navigate("/register")
-                }}
-            >
-                Register
-            </button>
+            <fieldset className="flex gap-10">
+                <button
+                    className="h-10 w-30 cursor-pointer rounded-2xl bg-gray-800 text-white hover:scale-105"
+                    onClick={handleSubmit}
+                >
+                    Login
+                </button>
+                <button
+                    className="h-10 w-30 cursor-pointer rounded-2xl bg-gray-800 text-white hover:scale-105"
+                    onClick={(e) => {
+                        e.preventDefault()
+                        navigate("/register")
+                    }}
+                >
+                    Register
+                </button>
+            </fieldset>
         </form>
     )
 }

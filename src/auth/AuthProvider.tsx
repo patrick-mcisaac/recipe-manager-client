@@ -26,7 +26,6 @@ export const AuthProvider = ({ children }: Props) => {
                         "recipe_token",
                         JSON.stringify(authInfo)
                     )
-                    setToken(authInfo.token)
                 }
             })
             .then(() => navigate("/"))
@@ -54,8 +53,15 @@ export const AuthProvider = ({ children }: Props) => {
             })
     }
 
+    const getToken = () => {
+        const userToken = localStorage.getItem("recipe_token")
+        if (userToken) {
+            setToken(JSON.parse(userToken).token)
+        }
+    }
+
     return (
-        <AuthContext.Provider value={{ token, login, register }}>
+        <AuthContext.Provider value={{ token, getToken, login, register }}>
             {children}
         </AuthContext.Provider>
     )

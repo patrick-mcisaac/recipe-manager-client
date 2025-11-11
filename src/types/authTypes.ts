@@ -13,6 +13,7 @@ export interface LoginType {
 
 export interface AuthContextType {
     token: string
+    getToken: () => void
     login: (data: LoginType) => void
     register: (data: RegisterType) => void
 }

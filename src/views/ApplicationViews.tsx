@@ -5,11 +5,13 @@ import { Recipes } from "../components/recipes/Recipes"
 import { RecipeDetails } from "../components/recipes/RecipeDetails"
 import { Login } from "../auth/Login"
 import { Authorized } from "../auth/Authorized"
+import { Register } from "../auth/Register"
 
 export const ApplicationViews = () => {
     return (
         <Routes>
             <Route path="/login" element={<Login />} />
+            <Route path="register" element={<Register />} />
 
             <Route
                 element={
