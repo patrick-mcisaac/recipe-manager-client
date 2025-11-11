@@ -28,7 +28,10 @@ export const RecipeDetails = () => {
                     </h2>
                     {recipe.ingredients?.map((i) => {
                         return (
-                            <p className="ml-8 md:m-0 md:text-center md:text-lg">
+                            <p
+                                key={i.id}
+                                className="ml-8 md:m-0 md:text-center md:text-lg"
+                            >
                                 {i.name}
                             </p>
                         )
@@ -38,6 +41,7 @@ export const RecipeDetails = () => {
                     {recipe.instructions.split(".").map((r) => {
                         return (
                             <p
+                                key={r}
                                 className={
                                     parseInt(r) ?
                                         "font-bold md:text-2xl"
