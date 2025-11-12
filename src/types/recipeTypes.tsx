@@ -9,6 +9,11 @@ export interface RecipeContextType {
     addFavorite: (id: string, token: string) => Promise<Response>
     removeFavorite: (id: string, token: string) => Promise<Response>
     createRecipe: (token: string, data: RecipeType) => Promise<Response>
+    updateRecipe: (
+        id: string,
+        token: string,
+        data: RecipeType
+    ) => Promise<Response>
 }
 
 export interface RecipeType {
@@ -20,4 +25,5 @@ export interface RecipeType {
     ingredients?: IngredientTypes[]
     favorites?: number
     is_favorite?: boolean
+    is_owner?: boolean
 }

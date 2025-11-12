@@ -69,6 +69,18 @@ export const RecipeProvider = ({ children }: Props) => {
             body: JSON.stringify(data)
         })
     }
+
+    const updateRecipe = (id: string, token: string, data: RecipeType) => {
+        return fetch(`http://localhost:8000/recipes/${id}`, {
+            method: "PUT",
+            headers: {
+                Authorization: `Token ${token}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        })
+    }
+
     return (
         <RecipeContext.Provider
             value={{
@@ -79,7 +91,8 @@ export const RecipeProvider = ({ children }: Props) => {
                 getFavoriteRecipes,
                 addFavorite,
                 removeFavorite,
-                createRecipe
+                createRecipe,
+                updateRecipe
             }}
         >
             {children}

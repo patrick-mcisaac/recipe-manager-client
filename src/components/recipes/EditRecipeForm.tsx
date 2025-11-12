@@ -1,0 +1,211 @@
+import type React from "react"
+import { useRecipes } from "../../hooks/useRecipes"
+import { useIngredients } from "../../hooks/useIngredients"
+import { useAuth } from "../../hooks/useAuth"
+import { IngredientsList } from "../ingredients/IngredientsList"
+import { useEffect, useState } from "react"
+import type { IngredientCheckboxType } from "../../types/ingredientTypes"
+import { useNavigate, useParams } from "react-router-dom"
+import type { RecipeType } from "../../types/recipeTypes"
+
+export const EditRecipeForm = () => {
+    const { recipe, getRecipeById, updateRecipe } = useRecipes()
+    const { ingredients, getIngredients } = useIngredients()
+    const [count, setCount] = useState<number[]>([0])
+    const [instructionArray, setInstructionArray] = useState<string[]>([""])
+    const [checkboxes, setCheckboxes] = useState<IngredientCheckboxType[]>([
+        {
+            id: 0,
+            name: "",
+            checked: false
+        }
+    ])
+    const [editRecipe, setEditRecipe] = useState<RecipeType>({
+        name: "",
+        description: "",
+        instructions: "",
+        ingredients: []
+    })
+
+    const { token } = useAuth()
+    const { recipeId } = useParams()
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        if (token && recipeId) {
+            getIngredients(token)
+            getRecipeById(recipeId, token)
+        }
+    }, [token, recipeId])
+
+    useEffect(() => {
+        if (recipe) {
+            setEditRecipe(recipe)
+        }
+        if (ingredients && recipe?.ingredients) {
+            const initialState = []
+            for (const i of ingredients) {
+                if (recipe.ingredients.find((r) => r.id === i.id)) {
+                    initialState.push({
+                        id: i.id,
+                        name: i.name,
+                        checked: true
+                    })
+                } else {
+                    initialState.push({
+                        id: i.id,
+                        name: i.name,
+                        checked: false
+                    })
+                }
+            }
+            setCheckboxes(initialState)
+        }
+    }, [ingredients, recipe])
+
+    useEffect(() => {
+        if (recipe?.instructions) {
+            const instructionBreak = recipe?.instructions.split(".")
+            if (instructionBreak) {
+                const initialState = []
+
+                for (let i = 0; i < instructionBreak?.length; i++) {
+                    if (i % 2 !== 0) {
+                        initialState.push(instructionBreak[i])
+                        setCount([...count, count.slice(-1)[0] + 1])
+                    }
+                }
+
+                setInstructionArray(initialState)
+            }
+        }
+    }, [recipe])
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        switch (e.target.name) {
+            case "name":
+                setEditRecipe({ ...editRecipe, name: e.target.value })
+                break
+            case "description":
+                setEditRecipe({ ...editRecipe, description: e.target.value })
+                break
+            default:
+                break
+        }
+    }
+
+    const handleSave = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        e.preventDefault()
+        let instructionString = ""
+        const copyArray = [...instructionArray]
+        for (let i = 0; i < copyArray.length; i++) {
+            instructionString += `${i + 1}. ${copyArray[i]}. `
+        }
+
+        if (
+            editRecipe.name !== "" &&
+            editRecipe.description !== "" &&
+            instructionString !== ""
+        ) {
+            const copyRecipe = {
+                ...editRecipe
+            }
+
+            const ingredientArray = []
+            for (const checkbox of checkboxes) {
+                if (checkbox.checked) {
+                    ingredientArray.push({
+                        id: checkbox.id,
+                        name: checkbox.name
+                    })
+                }
+            }
+            copyRecipe.ingredients = ingredientArray
+            copyRecipe.instructions = instructionString
+            if (recipeId && token) {
+                updateRecipe(recipeId, token, copyRecipe).then(() =>
+                    navigate("/recipes")
+                )
+            }
+        }
+    }
+    return (
+        recipe && (
+            <form
+                action=""
+                className="flex flex-col items-center justify-center gap-10 p-20"
+            >
+                <h1 className="text-6xl font-bold">Add Recipe</h1>
+                <fieldset className="flex flex-col gap-2">
+                    <label htmlFor="name">Name</label>
+                    <input
+                        className="rounded-2xl border pl-2"
+                        type="text"
+                        placeholder="name"
+                        id="name"
+                        name="name"
+                        value={editRecipe.name}
+                        onChange={handleChange}
+                    />
+                </fieldset>
+                <fieldset className="flex flex-col gap-2">
+                    <label htmlFor="description">Description</label>
+                    <input
+                        className="rounded-2xl border pl-2"
+                        type="text"
+                        placeholder="description"
+                        id="description"
+                        name="description"
+                        value={editRecipe.description}
+                        onChange={handleChange}
+                    />
+                </fieldset>
+                <fieldset className="flex flex-col gap-2">
+                    <legend>Ingredients</legend>
+                    {/* checkboxes for ingredients */}
+                    {ingredients &&
+                        checkboxes.map((i) => (
+                            <IngredientsList
+                                key={i.id}
+                                ingredient={i}
+                                setCheckboxes={setCheckboxes}
+                                checkboxes={checkboxes}
+                            />
+                        ))}
+                </fieldset>
+                <fieldset className="flex flex-col gap-5">
+                    <legend className="mb-5">Instructions</legend>
+                    {count.map((c) => (
+                        <input
+                            key={c}
+                            className="w-100 rounded-2xl border pl-2"
+                            onChange={(e) => {
+                                const copyInstruction = [...instructionArray]
+                                copyInstruction[c] = e.target.value
+                                setInstructionArray(copyInstruction)
+                            }}
+                            type="text"
+                            id={`instruction_${c}`}
+                            value={instructionArray[c]}
+                        />
+                    ))}
+                    <button
+                        onClick={(e) => {
+                            e.preventDefault()
+                            setCount([...count, count.slice(-1)[0] + 1])
+                        }}
+                        className="h-10 w-15 cursor-pointer self-end rounded-2xl bg-gray-800 text-white hover:scale-105"
+                    >
+                        add
+                    </button>
+                </fieldset>
+                <button
+                    className="h-10 w-30 cursor-pointer rounded-2xl bg-gray-800 text-white hover:scale-105"
+                    onClick={handleSave}
+                >
+                    Save
+                </button>
+            </form>
+        )
+    )
+}

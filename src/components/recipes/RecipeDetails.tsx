@@ -87,6 +87,14 @@ export const RecipeDetails = () => {
                         Favorite
                     </button>
                 }
+                {recipe.is_owner ?
+                    <button
+                        onClick={() => navigate(`/recipes/${recipeId}/edit`)}
+                        className="h-10 w-40 cursor-pointer self-center rounded-2xl bg-gray-800 text-white hover:scale-105"
+                    >
+                        Edit
+                    </button>
+                :   ""}
             </div>
         )
     )

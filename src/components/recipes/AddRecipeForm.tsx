@@ -58,7 +58,7 @@ export const AddRecipeForm = () => {
         let instructionString = ""
         const copyArray = [...instructionArray]
         for (let i = 0; i < copyArray.length; i++) {
-            instructionString += `${i + 1}. ${copyArray[i]} `
+            instructionString += `${i + 1}. ${copyArray[i]}. `
         }
 
         if (

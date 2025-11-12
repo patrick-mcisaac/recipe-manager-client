@@ -7,6 +7,7 @@ import { Authorized } from "../auth/Authorized"
 import { Register } from "../auth/Register"
 import { Favorites } from "../components/recipes/Favorites"
 import { AddRecipeForm } from "../components/recipes/AddRecipeForm"
+import { EditRecipeForm } from "../components/recipes/EditRecipeForm"
 
 export const ApplicationViews = () => {
     return (
@@ -24,7 +25,10 @@ export const ApplicationViews = () => {
                 <Route index element={<Home />} />
                 <Route path="recipes" element={<Outlet />}>
                     <Route index element={<Recipes />} />
-                    <Route path=":recipeId" element={<RecipeDetails />} />
+                    <Route path=":recipeId" element={<Outlet />}>
+                        <Route index element={<RecipeDetails />} />
+                        <Route path="edit" element={<EditRecipeForm />} />
+                    </Route>
                     <Route path="favorites" element={<Favorites />} />
                     <Route path="add" element={<AddRecipeForm />} />
                 </Route>
