@@ -8,10 +8,11 @@ export interface RecipeContextType {
     getFavoriteRecipes: (token: string) => void
     addFavorite: (id: string, token: string) => Promise<Response>
     removeFavorite: (id: string, token: string) => Promise<Response>
+    createRecipe: (token: string, data: RecipeType) => Promise<Response>
 }
 
 export interface RecipeType {
-    id: number
+    id?: number
     name: string
     description: string
     instructions: string
