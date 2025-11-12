@@ -7,6 +7,7 @@ import { useAuth } from "../../hooks/useAuth"
 import { IngredientsList } from "../ingredients/IngredientsList"
 import type { IngredientCheckboxType } from "../../types/ingredientTypes"
 import { useRecipes } from "../../hooks/useRecipes"
+import { useNavigate } from "react-router-dom"
 
 export const AddRecipeForm = () => {
     const [count, setCount] = useState<number[]>([0])
@@ -25,6 +26,8 @@ export const AddRecipeForm = () => {
             checked: false
         }
     ])
+
+    const navigate = useNavigate()
 
     const { ingredients, getIngredients } = useIngredients()
     const { createRecipe } = useRecipes()
@@ -76,7 +79,7 @@ export const AddRecipeForm = () => {
             }
             copyRecipe.instructions = instructionString
 
-            createRecipe(token, copyRecipe)
+            createRecipe(token, copyRecipe).then(() => navigate("/recipes"))
         }
     }
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
