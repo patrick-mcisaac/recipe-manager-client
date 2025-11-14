@@ -14,6 +14,7 @@ export interface RecipeContextType {
         token: string,
         data: RecipeType
     ) => Promise<Response>
+    deleteRecipe: (id: string, token: string) => Promise<Response>
 }
 
 export interface RecipeType {

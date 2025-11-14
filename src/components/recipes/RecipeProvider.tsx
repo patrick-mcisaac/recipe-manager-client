@@ -80,6 +80,15 @@ export const RecipeProvider = ({ children }: Props) => {
         })
     }
 
+    const deleteRecipe = (id: string, token: string) => {
+        return fetch(`http://localhost:8000/recipes/${id}`, {
+            method: "DELETE",
+            headers: {
+                Authorization: `Token ${token}`
+            }
+        })
+    }
+
     return (
         <RecipeContext.Provider
             value={{
@@ -91,7 +100,8 @@ export const RecipeProvider = ({ children }: Props) => {
                 addFavorite,
                 removeFavorite,
                 createRecipe,
-                updateRecipe
+                updateRecipe,
+                deleteRecipe
             }}
         >
             {children}

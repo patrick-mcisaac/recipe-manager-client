@@ -5,7 +5,8 @@ import { useAuth } from "../../hooks/useAuth"
 
 export const RecipeDetails = () => {
     const { recipeId } = useParams()
-    const { recipe, getRecipeById, addFavorite, removeFavorite } = useRecipes()
+    const { recipe, getRecipeById, addFavorite, removeFavorite, deleteRecipe } =
+        useRecipes()
     const { token, getToken } = useAuth()
 
     const navigate = useNavigate()
@@ -93,12 +94,28 @@ export const RecipeDetails = () => {
                     </button>
                 }
                 {recipe.is_owner ?
-                    <button
-                        onClick={() => navigate(`/recipes/${recipeId}/edit`)}
-                        className="h-10 w-40 cursor-pointer self-center rounded-2xl bg-gray-800 text-white hover:scale-105"
-                    >
-                        Edit
-                    </button>
+                    <>
+                        <button
+                            onClick={() =>
+                                navigate(`/recipes/${recipeId}/edit`)
+                            }
+                            className="h-10 w-40 cursor-pointer self-center rounded-2xl bg-gray-800 text-white hover:scale-105"
+                        >
+                            Edit
+                        </button>
+                        <button
+                            onClick={() => {
+                                if (token && recipeId) {
+                                    deleteRecipe(recipeId, token).then(() =>
+                                        navigate("/recipes")
+                                    )
+                                }
+                            }}
+                            className="h-10 w-40 cursor-pointer self-center rounded-2xl bg-gray-800 text-white hover:scale-105"
+                        >
+                            Delete
+                        </button>
+                    </>
                 :   ""}
             </div>
         )
