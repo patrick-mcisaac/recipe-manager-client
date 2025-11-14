@@ -30,6 +30,11 @@ export const RecipeDetails = () => {
                 <p className="mt-2 text-center md:mt-8 md:text-3xl md:font-semibold">
                     {recipe.description}
                 </p>
+                {recipe.image ?
+                    <div className="w-100 overflow-hidden rounded-2xl">
+                        <img src={recipe.image} alt="" />
+                    </div>
+                :   ""}
                 <div className="mt-5 self-start md:mt-10 md:self-center">
                     <h2 className="text-xl font-semibold md:text-2xl">
                         Ingredients

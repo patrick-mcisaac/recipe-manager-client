@@ -8,7 +8,7 @@ export interface RecipeContextType {
     getFavoriteRecipes: (token: string) => void
     addFavorite: (id: string, token: string) => Promise<Response>
     removeFavorite: (id: string, token: string) => Promise<Response>
-    createRecipe: (token: string, data: RecipeType) => Promise<Response>
+    createRecipe: (token: string, data: FormData) => Promise<Response>
     updateRecipe: (
         id: string,
         token: string,
@@ -26,4 +26,5 @@ export interface RecipeType {
     favorites?: number
     is_favorite?: boolean
     is_owner?: boolean
+    image?: string
 }

@@ -19,6 +19,10 @@ export const AddRecipeForm = () => {
     })
     const [instructionArray, setInstructionArray] = useState<string[]>([""])
 
+    const [selectedFile, setSelectedFile] = useState<File | undefined>(
+        undefined
+    )
+
     const [checkboxes, setCheckboxes] = useState<IngredientCheckboxType[]>([
         {
             id: 0,
@@ -55,6 +59,7 @@ export const AddRecipeForm = () => {
 
     const handleSave = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault()
+
         let instructionString = ""
         const copyArray = [...instructionArray]
         for (let i = 0; i < copyArray.length; i++) {
@@ -79,7 +84,19 @@ export const AddRecipeForm = () => {
             }
             copyRecipe.instructions = instructionString
 
-            createRecipe(token, copyRecipe).then(() => navigate("/recipes"))
+            const formData = new FormData()
+
+            formData.append("name", copyRecipe.name)
+            formData.append("description", copyRecipe.description)
+            formData.append("instructions", copyRecipe.instructions)
+
+            formData.append(
+                "ingredients",
+                JSON.stringify(copyRecipe.ingredients)
+            )
+            if (selectedFile) formData.append("image", selectedFile)
+
+            createRecipe(token, formData).then(() => navigate("/recipes"))
         }
     }
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -92,6 +109,13 @@ export const AddRecipeForm = () => {
                 break
             default:
                 break
+        }
+    }
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files) {
+            const file = e.target.files[0]
+
+            setSelectedFile(file)
         }
     }
     return (
@@ -136,6 +160,14 @@ export const AddRecipeForm = () => {
                             checkboxes={checkboxes}
                         />
                     ))}
+            </fieldset>
+            <fieldset>
+                <label htmlFor="image">Add Image</label>
+                <input
+                    onChange={handleFileChange}
+                    type="file"
+                    accept="image/*"
+                />
             </fieldset>
             <fieldset className="flex flex-col gap-5">
                 <legend className="mb-5">Instructions</legend>

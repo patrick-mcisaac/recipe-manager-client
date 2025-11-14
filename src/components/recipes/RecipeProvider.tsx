@@ -59,14 +59,13 @@ export const RecipeProvider = ({ children }: Props) => {
         })
     }
 
-    const createRecipe = (token: string, data: RecipeType) => {
+    const createRecipe = (token: string, data: FormData) => {
         return fetch(`http://localhost:8000/recipes`, {
             method: "POST",
             headers: {
-                Authorization: `Token ${token}`,
-                "Content-Type": "application/json"
+                Authorization: `Token ${token}`
             },
-            body: JSON.stringify(data)
+            body: data
         })
     }
 
