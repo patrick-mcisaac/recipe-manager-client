@@ -27,6 +27,10 @@ export const EditRecipeForm = () => {
         ingredients: []
     })
 
+    const [selectedFile, setSelectedFile] = useState<File | undefined>(
+        undefined
+    )
+
     const { token } = useAuth()
     const { recipeId } = useParams()
     const navigate = useNavigate()
@@ -94,6 +98,13 @@ export const EditRecipeForm = () => {
         }
     }
 
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files) {
+            const file = e.target.files[0]
+            setSelectedFile(file)
+        }
+    }
+
     const handleSave = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault()
         let instructionString = ""
@@ -120,10 +131,18 @@ export const EditRecipeForm = () => {
                     })
                 }
             }
-            copyRecipe.ingredients = ingredientArray
-            copyRecipe.instructions = instructionString
+            const formData = new FormData()
+
+            formData.append("name", copyRecipe.name)
+            formData.append("description", copyRecipe.description)
+            formData.append("ingredients", JSON.stringify(ingredientArray))
+            formData.append("instructions", instructionString)
+            if (selectedFile) {
+                formData.append("image", selectedFile)
+            }
+
             if (recipeId && token) {
-                updateRecipe(recipeId, token, copyRecipe).then(() =>
+                updateRecipe(recipeId, token, formData).then(() =>
                     navigate("/recipes")
                 )
             }
@@ -158,6 +177,13 @@ export const EditRecipeForm = () => {
                         name="description"
                         value={editRecipe.description}
                         onChange={handleChange}
+                    />
+                </fieldset>
+                <fieldset>
+                    <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleFileChange}
                     />
                 </fieldset>
                 <fieldset className="flex flex-col gap-2">

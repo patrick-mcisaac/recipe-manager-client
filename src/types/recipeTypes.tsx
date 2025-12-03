@@ -12,7 +12,7 @@ export interface RecipeContextType {
     updateRecipe: (
         id: string,
         token: string,
-        data: RecipeType
+        data: FormData
     ) => Promise<Response>
     deleteRecipe: (id: string, token: string) => Promise<Response>
 }

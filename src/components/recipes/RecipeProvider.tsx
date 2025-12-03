@@ -69,14 +69,13 @@ export const RecipeProvider = ({ children }: Props) => {
         })
     }
 
-    const updateRecipe = (id: string, token: string, data: RecipeType) => {
+    const updateRecipe = (id: string, token: string, data: FormData) => {
         return fetch(`http://localhost:8000/recipes/${id}`, {
             method: "PUT",
             headers: {
-                Authorization: `Token ${token}`,
-                "Content-Type": "application/json"
+                Authorization: `Token ${token}`
             },
-            body: JSON.stringify(data)
+            body: data
         })
     }
 
