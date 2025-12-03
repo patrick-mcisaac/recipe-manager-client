@@ -90,6 +90,9 @@ const addFavoriteMutation = async ({
     if (!response.ok) {
         throw new Error("Failed to add favorite")
     }
+    if (response.status === 204) {
+        return {} // Return an empty object for 204 No Content
+    }
     return response.json()
 }
 
@@ -108,6 +111,9 @@ const removeFavoriteMutation = async ({
     })
     if (!response.ok) {
         throw new Error("Failed to remove favorite")
+    }
+    if (response.status === 204) {
+        return {} // Return an empty object for 204 No Content
     }
     return response.json()
 }

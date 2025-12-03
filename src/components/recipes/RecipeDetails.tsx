@@ -20,6 +20,10 @@ export const RecipeDetails = () => {
             addFavoriteMutation.mutate(recipeId, {
                 onSuccess: () => {
                     navigate("/recipes/favorites")
+                },
+                onError: (error) => {
+                    console.error("Error adding favorite:", error)
+                    // Optionally, provide user feedback about the error
                 }
             })
         }
@@ -30,6 +34,10 @@ export const RecipeDetails = () => {
             removeFavoriteMutation.mutate(recipeId, {
                 onSuccess: () => {
                     navigate("/recipes/favorites")
+                },
+                onError: (error) => {
+                    console.error("Error removing favorite:", error)
+                    // Optionally, provide user feedback about the error
                 }
             })
         }
