@@ -61,27 +61,32 @@ export const EditRecipeForm = () => {
     }, [ingredients, recipe])
 
     useEffect(() => {
+        
         if (recipe?.instructions) {
-            const instructionBreak = recipe?.instructions.split(/(\d+\.\s*)/)
+            const instructionBreak = recipe?.instructions.split('.')
             if (instructionBreak) {
                 const parsedInstructions: string[] = []
                 const newCounts: number[] = []
                 let currentCountValue = 0
 
                 for (let i = 0; i < instructionBreak.length; i++) {
-                    const trimmedInstruction = instructionBreak[i].trim()
-                    // Filter out empty strings and the numbering pattern itself
-                    if (trimmedInstruction !== "" && !/^\d+\.\s*$/.test(trimmedInstruction)) {
-                        parsedInstructions.push(trimmedInstruction)
-                        newCounts.push(currentCountValue)
-                        currentCountValue++
+                    if(parseInt(instructionBreak[i])){
+                        continue
+                    }else if(instructionBreak[i] === '' || instructionBreak[i].trim() === ''){
+                        continue
                     }
+                    else{
+                        parsedInstructions.push(instructionBreak[i])
+                        newCounts.push(currentCountValue)
+                        currentCountValue ++
+                    }
+                    }
+                    setInstructionArray(parsedInstructions)
+                    setCount(newCounts) // Set counts once with unique values
                 }
-                setInstructionArray(parsedInstructions)
-                setCount(newCounts) // Set counts once with unique values
             }
         }
-    }, [recipe])
+    , [recipe])
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         switch (e.target.name) {
@@ -116,9 +121,7 @@ export const EditRecipeForm = () => {
             editRecipe.description !== "" &&
             instructionString !== ""
         ) {
-            const copyRecipe = {
-                ...editRecipe
-            }
+            
 
             const ingredientArray : IngredientTypes[] = []
             for (const checkbox of checkboxes) {
@@ -129,11 +132,17 @@ export const EditRecipeForm = () => {
                     })
                 }
             }
+
+            const copyRecipe= {
+                ...editRecipe,
+                ingredients: ingredientArray
+            }
+
             const formData = new FormData()
 
             formData.append("name", copyRecipe.name)
             formData.append("description", copyRecipe.description)
-            formData.append('ingredients', JSON.stringify(ingredientArray))
+            formData.append('ingredients', JSON.stringify(copyRecipe.ingredients))
             formData.append("instructions", instructionString)
             if (selectedFile) {
                 formData.append("image", selectedFile)
