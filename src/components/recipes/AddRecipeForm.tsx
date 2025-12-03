@@ -1,12 +1,10 @@
 import type React from "react"
-import { useEffect, useState } from "react"
+import { useState, useEffect } from "react"
 import type { RecipeType } from "../../types/recipeTypes"
 import { useIngredients } from "../../hooks/useIngredients"
-import { useAuth } from "../../hooks/useAuth"
-
 import { IngredientsList } from "../ingredients/IngredientsList"
 import type { IngredientCheckboxType } from "../../types/ingredientTypes"
-import { useRecipes } from "../../hooks/useRecipes"
+import { useCreateRecipe } from "../../hooks/useRecipes"
 import { useNavigate } from "react-router-dom"
 
 export const AddRecipeForm = () => {
@@ -33,15 +31,8 @@ export const AddRecipeForm = () => {
 
     const navigate = useNavigate()
 
-    const { ingredients, getIngredients } = useIngredients()
-    const { createRecipe } = useRecipes()
-    const { token } = useAuth()
-
-    useEffect(() => {
-        if (token) {
-            getIngredients(token)
-        }
-    }, [token])
+    const { data: ingredients } = useIngredients()
+    const createRecipeMutation = useCreateRecipe()
 
     useEffect(() => {
         const initialState = []
@@ -96,7 +87,15 @@ export const AddRecipeForm = () => {
             )
             if (selectedFile) formData.append("image", selectedFile)
 
-            createRecipe(token, formData).then(() => navigate("/recipes"))
+            createRecipeMutation.mutate(formData, {
+                onSuccess: () => {
+                    navigate("/recipes")
+                },
+                onError: (error) => {
+                    console.error("Failed to create recipe:", error)
+                    alert("Failed to create recipe. Check console for details.")
+                }
+            })
         }
     }
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

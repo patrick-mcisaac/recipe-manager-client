@@ -1,27 +1,50 @@
-import { useEffect } from "react"
 import { useNavigate, useParams } from "react-router-dom"
-import { useRecipes } from "../../hooks/useRecipes"
-import { useAuth } from "../../hooks/useAuth"
+import {
+    useRecipeById,
+    useAddFavorite,
+    useRemoveFavorite,
+    useDeleteRecipe
+} from "../../hooks/useRecipes"
 
 export const RecipeDetails = () => {
     const { recipeId } = useParams()
-    const { recipe, getRecipeById, addFavorite, removeFavorite, deleteRecipe } =
-        useRecipes()
-    const { token, getToken } = useAuth()
-
     const navigate = useNavigate()
 
-    useEffect(() => {
-        getToken()
-    }, [])
+    const { data: recipe } = useRecipeById(recipeId || "")
+    const addFavoriteMutation = useAddFavorite()
+    const removeFavoriteMutation = useRemoveFavorite()
+    const deleteRecipeMutation = useDeleteRecipe()
 
-    useEffect(() => {
+    const handleAddFavorite = () => {
         if (recipeId) {
-            getRecipeById(recipeId, token)
+            addFavoriteMutation.mutate(recipeId, {
+                onSuccess: () => {
+                    navigate("/recipes/favorites")
+                }
+            })
         }
-    }, [recipeId])
-    // TODO: maybe refactor how ingredients are stored to map it nicer
-    // TODO: add image to db
+    }
+
+    const handleRemoveFavorite = () => {
+        if (recipeId) {
+            removeFavoriteMutation.mutate(recipeId, {
+                onSuccess: () => {
+                    navigate("/recipes/favorites")
+                }
+            })
+        }
+    }
+
+    const handleDeleteRecipe = () => {
+        if (recipeId) {
+            deleteRecipeMutation.mutate(recipeId, {
+                onSuccess: () => {
+                    navigate("/recipes")
+                }
+            })
+        }
+    }
+
     return (
         recipe && (
             <div className="flex flex-col items-center justify-center p-8 md:gap-10 md:p-15">
@@ -69,25 +92,13 @@ export const RecipeDetails = () => {
                 </div>
                 {recipe.is_favorite ?
                     <button
-                        onClick={() => {
-                            if (recipeId) {
-                                removeFavorite(recipeId, token).then(() =>
-                                    navigate("/recipes/favorites")
-                                )
-                            }
-                        }}
+                        onClick={handleRemoveFavorite}
                         className="h-10 w-40 cursor-pointer self-center rounded-2xl bg-gray-800 text-white hover:scale-105"
                     >
                         Remove Favorite
                     </button>
                 :   <button
-                        onClick={() => {
-                            if (recipeId) {
-                                addFavorite(recipeId, token).then(() =>
-                                    navigate("/recipes/favorites")
-                                )
-                            }
-                        }}
+                        onClick={handleAddFavorite}
                         className="h-10 w-40 cursor-pointer self-center rounded-2xl bg-gray-800 text-white hover:scale-105"
                     >
                         Favorite
@@ -104,13 +115,7 @@ export const RecipeDetails = () => {
                             Edit
                         </button>
                         <button
-                            onClick={() => {
-                                if (token && recipeId) {
-                                    deleteRecipe(recipeId, token).then(() =>
-                                        navigate("/recipes")
-                                    )
-                                }
-                            }}
+                            onClick={handleDeleteRecipe}
                             className="h-10 w-40 cursor-pointer self-center rounded-2xl bg-gray-800 text-white hover:scale-105"
                         >
                             Delete

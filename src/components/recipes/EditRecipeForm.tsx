@@ -1,16 +1,20 @@
 import type React from "react"
-import { useRecipes } from "../../hooks/useRecipes"
+import { useRecipeById, useUpdateRecipe } from "../../hooks/useRecipes"
 import { useIngredients } from "../../hooks/useIngredients"
-import { useAuth } from "../../hooks/useAuth"
 import { IngredientsList } from "../ingredients/IngredientsList"
 import { useEffect, useState } from "react"
-import type { IngredientCheckboxType } from "../../types/ingredientTypes"
+import type { IngredientCheckboxType, IngredientTypes } from "../../types/ingredientTypes"
 import { useNavigate, useParams } from "react-router-dom"
 import type { RecipeType } from "../../types/recipeTypes"
 
 export const EditRecipeForm = () => {
-    const { recipe, getRecipeById, updateRecipe } = useRecipes()
-    const { ingredients, getIngredients } = useIngredients()
+    const { recipeId } = useParams()
+    const navigate = useNavigate()
+
+    const { data: recipe } = useRecipeById(recipeId || "")
+    const { data: ingredients } = useIngredients()
+    const updateRecipeMutation = useUpdateRecipe()
+
     const [count, setCount] = useState<number[]>([0])
     const [instructionArray, setInstructionArray] = useState<string[]>([""])
     const [checkboxes, setCheckboxes] = useState<IngredientCheckboxType[]>([
@@ -30,17 +34,6 @@ export const EditRecipeForm = () => {
     const [selectedFile, setSelectedFile] = useState<File | undefined>(
         undefined
     )
-
-    const { token } = useAuth()
-    const { recipeId } = useParams()
-    const navigate = useNavigate()
-
-    useEffect(() => {
-        if (token && recipeId) {
-            getIngredients(token)
-            getRecipeById(recipeId, token)
-        }
-    }, [token, recipeId])
 
     useEffect(() => {
         if (recipe) {
@@ -69,18 +62,23 @@ export const EditRecipeForm = () => {
 
     useEffect(() => {
         if (recipe?.instructions) {
-            const instructionBreak = recipe?.instructions.split(".")
+            const instructionBreak = recipe?.instructions.split(/(\d+\.\s*)/)
             if (instructionBreak) {
-                const initialState = []
+                const parsedInstructions: string[] = []
+                const newCounts: number[] = []
+                let currentCountValue = 0
 
-                for (let i = 0; i < instructionBreak?.length; i++) {
-                    if (i % 2 !== 0) {
-                        initialState.push(instructionBreak[i])
-                        setCount([...count, count.slice(-1)[0] + 1])
+                for (let i = 0; i < instructionBreak.length; i++) {
+                    const trimmedInstruction = instructionBreak[i].trim()
+                    // Filter out empty strings and the numbering pattern itself
+                    if (trimmedInstruction !== "" && !/^\d+\.\s*$/.test(trimmedInstruction)) {
+                        parsedInstructions.push(trimmedInstruction)
+                        newCounts.push(currentCountValue)
+                        currentCountValue++
                     }
                 }
-
-                setInstructionArray(initialState)
+                setInstructionArray(parsedInstructions)
+                setCount(newCounts) // Set counts once with unique values
             }
         }
     }, [recipe])
@@ -122,7 +120,7 @@ export const EditRecipeForm = () => {
                 ...editRecipe
             }
 
-            const ingredientArray = []
+            const ingredientArray : IngredientTypes[] = []
             for (const checkbox of checkboxes) {
                 if (checkbox.checked) {
                     ingredientArray.push({
@@ -135,15 +133,24 @@ export const EditRecipeForm = () => {
 
             formData.append("name", copyRecipe.name)
             formData.append("description", copyRecipe.description)
-            formData.append("ingredients", JSON.stringify(ingredientArray))
+            formData.append('ingredients', JSON.stringify(ingredientArray))
             formData.append("instructions", instructionString)
             if (selectedFile) {
                 formData.append("image", selectedFile)
             }
 
-            if (recipeId && token) {
-                updateRecipe(recipeId, token, formData).then(() =>
-                    navigate("/recipes")
+            if (recipeId) {
+                updateRecipeMutation.mutate(
+                    { id: recipeId, data: formData },
+                    {
+                        onSuccess: () => {
+                            navigate("/recipes")
+                        },
+                        onError: (error) => {
+                            console.error("Failed to update recipe:", error)
+                            alert("Failed to update recipe. Check console for details.")
+                        }
+                    }
                 )
             }
         }
@@ -180,6 +187,7 @@ export const EditRecipeForm = () => {
                     />
                 </fieldset>
                 <fieldset>
+                    <label htmlFor="image">Add Image</label>
                     <input
                         type="file"
                         accept="image/*"
@@ -218,7 +226,12 @@ export const EditRecipeForm = () => {
                     <button
                         onClick={(e) => {
                             e.preventDefault()
-                            setCount([...count, count.slice(-1)[0] + 1])
+                            setCount((prevCount) => [
+                                ...prevCount,
+                                prevCount.length > 0
+                                    ? prevCount.slice(-1)[0] + 1
+                                    : 0
+                            ])
                         }}
                         className="h-10 w-15 cursor-pointer self-end rounded-2xl bg-gray-800 text-white hover:scale-105"
                     >
