@@ -67,7 +67,7 @@ export const RecipeDetails = () => {
                         <img src={recipe.image} alt="" />
                     </div>
                 :   ""}
-                <div className="mt-5 self-start md:mt-10 md:self-center">
+                <div className="mt-5 md:mt-10 self-center">
                     <h2 className="text-xl font-semibold md:text-2xl">
                         Ingredients
                     </h2>
@@ -75,7 +75,7 @@ export const RecipeDetails = () => {
                         return (
                             <p
                                 key={i.id}
-                                className="ml-8 md:m-0 md:text-center md:text-lg"
+                                className=" text-center md:text-lg"
                             >
                                 {i.name}
                             </p>
@@ -101,13 +101,13 @@ export const RecipeDetails = () => {
                 {recipe.is_favorite ?
                     <button
                         onClick={handleRemoveFavorite}
-                        className="h-10 w-40 cursor-pointer self-center rounded-2xl bg-gray-800 text-white hover:scale-105"
+                        className='mt-10 h-10 w-40 cursor-pointer self-center font-semibold text-(--background) rounded-2xl bg-button hover:scale-105  transition'
                     >
                         Remove Favorite
                     </button>
                 :   <button
                         onClick={handleAddFavorite}
-                        className="h-10 w-40 cursor-pointer self-center rounded-2xl bg-gray-800 text-white hover:scale-105"
+                        className='mt-10 h-10 w-40 cursor-pointer self-center font-semibold text-(--background) rounded-2xl bg-button hover:scale-105  transition'
                     >
                         Favorite
                     </button>
@@ -118,14 +118,12 @@ export const RecipeDetails = () => {
                             onClick={() =>
                                 navigate(`/recipes/${recipeId}/edit`)
                             }
-                            className="h-10 w-40 cursor-pointer self-center rounded-2xl bg-gray-800 text-white hover:scale-105"
-                        >
+                            className='mt-10 h-10 w-40 cursor-pointer self-center font-semibold text-(--background) rounded-2xl bg-button hover:scale-105  transition'                        >
                             Edit
                         </button>
                         <button
                             onClick={handleDeleteRecipe}
-                            className="h-10 w-40 cursor-pointer self-center rounded-2xl bg-gray-800 text-white hover:scale-105"
-                        >
+                            className='mt-10 h-10 w-40 cursor-pointer self-center font-semibold text-(--background) rounded-2xl bg-button hover:scale-105  transition'                        >
                             Delete
                         </button>
                     </>

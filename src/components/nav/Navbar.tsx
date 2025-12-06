@@ -9,7 +9,7 @@ export const Navbar = () => {
         getToken()
     }, [])
     return (
-        <ul className="flex h-20 items-center justify-between p-5 md:p-10 dark:bg-gray-950 dark:text-white">
+        <ul className="flex h-20 items-center justify-center md:gap-0 gap-5 md:justify-between p-5 md:p-10 dark:bg-dark">
             <div className="flex items-center justify-center gap-5 md:gap-10">
                 <Link to="/recipes">
                     <li className="text-2xl hover:scale-105">Recipes</li>

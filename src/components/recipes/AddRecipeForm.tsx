@@ -122,11 +122,11 @@ export const AddRecipeForm = () => {
             action=""
             className="flex flex-col items-center justify-center gap-10 p-20"
         >
-            <h1 className="text-6xl font-bold">Add Recipe</h1>
+            <h1 className="text-4xl md:text-6xl font-bold text-center">Add Recipe</h1>
             <fieldset className="flex flex-col gap-2">
                 <label htmlFor="name">Name</label>
                 <input
-                    className="rounded-2xl border pl-2"
+                    className="rounded-2xl border pl-2 bg-button text-(--background)"
                     type="text"
                     placeholder="name"
                     id="name"
@@ -138,7 +138,7 @@ export const AddRecipeForm = () => {
             <fieldset className="flex flex-col gap-2">
                 <label htmlFor="description">Description</label>
                 <input
-                    className="rounded-2xl border pl-2"
+                    className="rounded-2xl border pl-2 bg-button text-(--background)"
                     type="text"
                     placeholder="description"
                     id="description"
@@ -147,9 +147,11 @@ export const AddRecipeForm = () => {
                     onChange={handleChange}
                 />
             </fieldset>
-            <fieldset className="flex flex-col gap-2">
-                <legend>Ingredients</legend>
+            <fieldset className="flex flex-col">
+                <legend className="font-semibold text-xl mb-4 text-center">Ingredients</legend>
                 {/* checkboxes for ingredients */}
+                <div className="flex flex-wrap w-50 gap-2 justify-center items-center">
+
                 {ingredients &&
                     checkboxes.map((i) => (
                         <IngredientsList
@@ -159,10 +161,13 @@ export const AddRecipeForm = () => {
                             checkboxes={checkboxes}
                         />
                     ))}
+                </div>
+
             </fieldset>
-            <fieldset>
+            <fieldset className="flex flex-col gap-5">
                 <label htmlFor="image">Add Image</label>
                 <input
+                className="w-full md:w-100 rounded-2xl border pl-2 bg-button text-(--background)"
                     onChange={handleFileChange}
                     type="file"
                     accept="image/*"
@@ -173,7 +178,7 @@ export const AddRecipeForm = () => {
                 {count.map((c) => (
                     <input
                         key={c}
-                        className="w-100 rounded-2xl border pl-2"
+                        className="w-full md:w-100 rounded-2xl border pl-2 bg-button text-(--background)"
                         onChange={(e) => {
                             const copyInstruction = [...instructionArray]
                             copyInstruction[c] = e.target.value
@@ -189,13 +194,14 @@ export const AddRecipeForm = () => {
                         e.preventDefault()
                         setCount([...count, count.slice(-1)[0] + 1])
                     }}
-                    className="h-10 w-15 cursor-pointer self-end rounded-2xl bg-gray-800 text-white hover:scale-105"
+                    className="h-10 w-15 cursor-pointer self-end font-semibold text-(--background) rounded-2xl bg-button hover:scale-105  transition"
+                   
                 >
-                    add
+                    Add
                 </button>
             </fieldset>
             <button
-                className="h-10 w-30 cursor-pointer rounded-2xl bg-gray-800 text-white hover:scale-105"
+                className='mt-10 h-10 w-full  cursor-pointer self-center font-semibold text-(--background) rounded-2xl bg-button hover:scale-105  transition'
                 onClick={handleSave}
             >
                 Save

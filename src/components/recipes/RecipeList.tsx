@@ -9,9 +9,10 @@ export const RecipeList = ({ recipe }: RecipeProps) => {
     return (
         <div
             onClick={() => navigate(`/recipes/${recipe.id}`)}
-            className="flex h-50 w-full cursor-pointer items-center justify-center rounded-2xl border hover:scale-105 md:w-90"
+            className="card hover:scale-105 transition"
+         
         >
-            <h1>{recipe.name}</h1>
+            <h1 className="text-2xl">{recipe.name}</h1>
         </div>
     )
 }

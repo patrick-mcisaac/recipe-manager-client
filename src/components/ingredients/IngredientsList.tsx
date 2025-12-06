@@ -26,7 +26,7 @@ export const IngredientsList = ({
         }
     }
     return (
-        <div>
+        <div className=" w-full flex justify-between ">
             <label htmlFor={ingredient.name}>{ingredient.name}</label>
             <input
                 type="checkbox"

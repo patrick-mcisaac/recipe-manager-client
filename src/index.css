@@ -1,1 +1,46 @@
 @import "tailwindcss";
+
+:root{
+    --background: #ededed;
+    --foreground: #1e1e1e;
+
+    --button: #2c2b2b;
+}
+
+@theme {
+    --color-foreground: var(--foreground);
+    --color-background: var(--foreground);
+
+    --color-dark: #131313;
+    --color-button: var(--button);
+}
+
+@media (prefers-color-scheme: dark){
+    :root {
+        --background: #1e1e1e;
+        --foreground: #ededed;
+        --button: #bebdbd;
+    }
+}
+
+body {
+    background: var(--background);
+    color: var(--foreground);
+    
+}
+
+@layer components {
+    .card{
+        /* border: 1px solid var(--foreground); */
+        height: 15rem;
+        width: 25rem;
+        cursor: pointer;
+        border-radius: 2rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 0px 0px 2px 1px var(--foreground);
+    }
+
+    
+}

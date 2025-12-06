@@ -8,12 +8,12 @@ export const Recipes = () => {
 
     return (
         <div className="flex flex-col p-10">
-            <h1 className="text-center text-6xl font-bold tracking-wider md:mt-15 md:text-6xl">
+            <h1 className="text-center text-7xl font-bold tracking-wider md:mt-15 md:text-8xl">
                 Recipes
             </h1>
             <button
                 onClick={() => navigate("/recipes/add")}
-                className="mt-10 h-10 w-40 cursor-pointer self-center rounded-2xl bg-gray-800 text-white hover:scale-105 lg:self-end"
+                className="mt-10 h-10 w-40 cursor-pointer self-center font-semibold text-(--background) rounded-2xl bg-button hover:scale-105 lg:self-end transition"
             >
                 Add Recipe
             </button>
